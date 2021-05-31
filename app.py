@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request
 from flask_mysqldb import MySQL
 
@@ -10,6 +11,10 @@ app.config['MYSQL_DB'] = 'sklep'
 # app.config['MYSQL_PORT'] = '3306'
 mysql = MySQL(app)
 
+
+@app.route('/')
+def home():
+    return render_template('home.html')
 
 @app.route('/register')
 def form():
@@ -33,7 +38,12 @@ def login():
         numer_domu = request.form['numer_domu']
 
         cursor = mysql.connection.cursor()
-        cursor.execute('''INSERT INTO Dane_uzytkownika (imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu) VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');'''%(imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu))
+
+        args = [imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu]
+        cursor.callproc('dodaj_uzytkownika', args)
+
+        # cursor.execute('''INSERT INTO Dane_uzytkownika (imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu) VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');'''%(imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu))
+        # cursor.execute('''CALL dodaj_uzytkownika('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');'''%(imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu))
 
         mysql.connection.commit()
         cursor.close()

@@ -1,0 +1,19 @@
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Internet Shop Application</title>
+      {% else %}
+      <title>WInternet Shop</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>Internet  shop navigation:
+            <a href="/">Home</a>
+            <a href="/register">Sign up</a>
+        </div>
+        <hr>
+        {% block content %}{% endblock %}
+         <h1>Internet Shop Application</h1>
+    <p>Hello, welcome to our shop.</p>
+    </body>
+</html>
