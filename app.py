@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, flash
 from flask_mysqldb import MySQL
 from werkzeug.utils import redirect
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -97,7 +97,8 @@ def signUp():
 
             mysql.connection.commit()
             cursor.close()
-            return f"Done!!"
+            flash('Congratulations, you are now a registered user!')
+            return render_template('error.html', error='Congratulation, now you are registered!')
         else:
             return render_template('error.html', error='Password and confirmation does not match!')
 
