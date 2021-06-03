@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, json, session
+from flask import Flask, render_template, request, session
 from flask_mysqldb import MySQL
 from werkzeug.utils import redirect
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -81,21 +81,40 @@ def signUp():
         kod_pocztowy = request.form['kod_pocztowy']
         numer_domu = request.form['numer_domu']
         numer_mieszkania = request.form['numer_mieszkania']
+        hasloConfirm = request.form['hasloConfirm']
 
         hashed_haslo = generate_password_hash(haslo)
+        hashed_hasloConfirm = generate_password_hash(hasloConfirm)
+        if (haslo == hasloConfirm):
+            cursor = mysql.connection.cursor()
 
+            # args = [imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu]
+            # cursor.callproc('dodaj_uzytkownika', args)
+
+
+            cursor.execute(
+                    '''INSERT INTO Dane_uzytkownika (imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu, numer_mieszkania) VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s', '%s');'''
+                    %(imie, nazwisko, login, hashed_haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu, numer_mieszkania))
+
+            mysql.connection.commit()
+            cursor.close()
+            return f"Done!!"
+        else:
+            return render_template('error.html', error='Password and confirmation does not match!')
+
+
+@app.route('/profile', methods=['GET'])
+def profileInfo():
+    try:
         cursor = mysql.connection.cursor()
-
-        # args = [imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu]
-        # cursor.callproc('dodaj_uzytkownika', args)
-
-
+        # cursor.callproc('sprawdz_login', (login,haslo,))
         cursor.execute(
-                '''INSERT INTO Dane_uzytkownika (imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu, numer_mieszkania) VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s', '%s');'''
-                %(imie, nazwisko, login, hashed_haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu, numer_mieszkania))
+            '''	select * from Dane_uzytkownika where Dane_ID = '%s' ;''')%(session['user'])
 
-        mysql.connection.commit()
-        cursor.close()
-        return f"Done!!"
+        data = cursor.fetchall()
+        imie = session['user']
+        return render_template('/profile.html', name=imie)
+    except Exception as e:
+        return render_template('error.html', error=str(e))
 
 app.run(host='localhost', port=5000)
