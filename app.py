@@ -55,7 +55,7 @@ def validateLogin():
             if check_password_hash(str(data[0][4]), haslo):
                 session['user'] = data[0][0]
 
-                return render_template('/userHome.html', userName = login)
+                return redirect('userHome')
             else:
                 return render_template('error.html', error='Wrong Login or Password.')
         else:
@@ -111,7 +111,7 @@ def profileInfo():
             '''	select * from Dane_uzytkownika where Dane_ID = '%s' ;''')%(session['user'])
 
         data = cursor.fetchall()
-        imie = session['user']
+        imie = data[0][1]
         return render_template('/profile.html', name=imie)
     except Exception as e:
         return render_template('error.html', error=str(e))
