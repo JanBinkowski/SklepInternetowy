@@ -27,8 +27,15 @@ def signIn():
 
 @app.route('/userHome')
 def userHome():
-    return render_template('userHome.html')
+    if session.get('user'):
+        return render_template('userHome.html')
+    else:
+        return render_template('error.html', error='Unauthorized Access')
 
+@app.route('/logout')
+def logout():
+    session.pop('user',None)
+    return redirect('/')
 
 @app.route('/validateLogin', methods=['POST'])
 def validateLogin():
