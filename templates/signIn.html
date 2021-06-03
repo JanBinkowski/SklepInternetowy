@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      {% if title %}
+      <title>{{ title }} - Internet Shop Application</title>
+      {% else %}
+      <title>Internet Shop</title>
+      {% endif %}
+</head>
+
+  <body>
+
+    <div>Internet  shop:&nbsp;&nbsp;&nbsp;
+            <a href="/">Home</a>&nbsp;&nbsp;&nbsp;
+            <a href="/register">Sign Up</a>&nbsp;&nbsp;&nbsp;
+            <a href="/signIn">Sign In</a>&nbsp;&nbsp;&nbsp;
+    </div>
+        <hr>
+
+      <div class="jumbotron">
+        <h1>Sign In!</h1>
+        <form class="form-signin" action="/validateLogin" method="post">
+        <label for="inputLogin" class="sr-only">Login</label><br>
+        <input type="text" name="inputLogin" id="inputLogin" class="form-control" placeholder="Login" required autofocus><br><br>
+        <label for="inputPassword" class="sr-only">Password</label><br>
+        <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required><br><br>
+
+        <button id="btnSignIn" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+      </div>
+
+
+
+       <footer class="footer">
+        <p>&copy; Bazy Danych - Projekt 2021</p>
+        </footer>
+    </div>
+  </body>
+</html>

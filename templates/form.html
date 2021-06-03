@@ -9,15 +9,16 @@
       {% endif %}
 </head>
 <body>
-<div>Internet  shop navigation:
-            <a href="/">Home</a>
-            <a href="/register">Sign up</a>
+<div>Internet  shop:&nbsp;&nbsp;&nbsp;
+            <a href="/">Home</a>&nbsp;&nbsp;&nbsp;
+            <a href="/register">Sign Up</a>&nbsp;&nbsp;&nbsp;
+            <a href="/signIn">Sign In</a>&nbsp;&nbsp;&nbsp;
         </div>
         <hr>
-<form action="/login" method = "POST">
-     <p>Sign up!</p>
+<form action="/signUp" method = "POST">
+     <h1>Sign Up!</h1>
     <label>* First name:</label><br>
-   <input type = "text" name = "imie" required/></br>
+   <input type = "text" name = "imie" required autofocus/><br>
       <label>* Last name:</label><br>
    <input type = "text" name = "nazwisko" required/><br>
       <label>* Login:</label><br>
@@ -41,6 +42,10 @@
     <p><input type = "submit" value = "Submit" /></p>
 </form>
 <p>* - Required fileds.</p>
+
+ <footer class="footer">
+        <p>&copy; Bazy Danych - Projekt 2021</p>
+        </footer>
 </body>
 
 </html>
