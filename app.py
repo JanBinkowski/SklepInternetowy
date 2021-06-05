@@ -106,9 +106,9 @@ def profileInfo():
     try:
         cursor = mysql.connection.cursor()
         # cursor.callproc('sprawdz_login', (login,haslo,))
+        print (session['user'])
         cursor.execute(
-            '''	select * from Dane_uzytkownika where Dane_ID = '%s' ;''')%(session['user'])
-
+            '''	select * from Dane_uzytkownika where Dane_ID = '%s' ;''' %(session['user']))
         data = cursor.fetchall()
         imie = data[0][1]
         return render_template('/profile.html', name=imie)
