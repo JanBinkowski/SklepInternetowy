@@ -80,16 +80,29 @@ def sendSellRequest():
         return "Something went wrong"
 
     if request.method == 'POST':
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            '''	select * from Sprzedajacy where Dane_ID = '%s' ;''' %(session['user']))
+        data = cursor.fetchall()
+        sellerID = data[0][0]
         name = request.form['name']
         price = request.form['price']
         description = request.form['description']
         category = request.form['categories']
-        print(name)
-        print(price)
-        print(description)
-        print(category)
 
-        return render_template('error.html', error='Just testing')
+        categoryID = 1
+        if category == 'Electronics':
+            categoryID = 1
+        if category == 'Clothes':
+            categoryID = 2
+        if category == 'Kitchen utensils':
+            categoryID = 3
+        
+        cursor.callproc('dodajProdukt',[name, price, description, categoryID, 1, sellerID])
+        mysql.connection.commit()
+        cursor.close()
+
+        return render_template('error.html', error='Your product has been added for sale.')
         
 
 @app.route('/signUp', methods=['POST', 'GET'])
