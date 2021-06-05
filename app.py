@@ -88,12 +88,7 @@ def signUp():
         if (haslo == hasloConfirm):
             cursor = mysql.connection.cursor()
 
-            # args = [imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu]
-            # cursor.callproc('dodaj_uzytkownika', args)
-
-            cursor.execute(
-                    '''INSERT INTO Dane_uzytkownika (imie, nazwisko, login, haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu, numer_mieszkania) VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s', '%s');'''
-                    %(imie, nazwisko, login, hashed_haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu, numer_mieszkania))
+            cursor.callproc('dodaj_uzytkownika',[imie, nazwisko, login, hashed_haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu, numer_mieszkania])
 
             mysql.connection.commit()
             cursor.close()
