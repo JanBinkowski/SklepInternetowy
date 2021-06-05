@@ -28,6 +28,13 @@ def form():
 def signIn():
     return render_template('signIn.html')
 
+@app.route('/passwordChange')
+def passwordChange():
+    if session.get('user'):
+        return render_template('passwordChange.html')
+    else:
+        return render_template('error.html', error = 'Log in if you want to change your password')
+
 @app.route('/editProfile', methods=['GET'])
 def editProfile():
     if session.get('user'):
@@ -36,8 +43,16 @@ def editProfile():
             '''	select * from Dane_uzytkownika where Dane_ID = '%s' ;''' %(session['user']))
         data = cursor.fetchall()
         imie = data[0][1]
+        nazwisko = data[0][2]
+        panstwo = data[0][5]
+        miasto = data[0][6]
+        wojewodztwo = data[0][7]
+        ulica = data[0][8]
+        kod = data[0][9]
+        nrDomu = data[0][10]
+        nrMieszkania = data[0][11]
         cursor.close()
-        return render_template('editProfile.html', name=imie)
+        return render_template('editProfile.html', name=imie, surname=nazwisko, country=panstwo, city=miasto, voivodeship=wojewodztwo, street=ulica, zip=kod, house=nrDomu, appno=nrMieszkania)
     else:
         return render_template('error.html', error='Log in if you want to edit your profile.')
 
@@ -71,7 +86,7 @@ def validateLogin():
             if check_password_hash(str(data[0][4]), haslo):
                 session['user'] = data[0][0]
 
-                return redirect('userHome')
+                return redirect('/')
             else:
                 return render_template('error.html', error='Wrong Login or Password.')
         else:
@@ -156,7 +171,6 @@ def signUp():
 def profileInfo():
     try:
         cursor = mysql.connection.cursor()
-        # cursor.callproc('sprawdz_login', (login,haslo,))
         cursor.execute(
             '''	select * from Dane_uzytkownika where Dane_ID = '%s' ;''' %(session['user']))
         data = cursor.fetchall()
@@ -164,5 +178,28 @@ def profileInfo():
         return render_template('profile.html', name=imie)
     except Exception as e:
         return render_template('error.html', error=str(e))
+
+@app.route('/passwordChangeRequest', methods=['POST', 'GET'])
+def passwordChangeRequest():
+    if session.get('user'):
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            '''	select * from Dane_uzytkownika where Dane_ID = '%s' ;''' %(session['user']))
+        data = cursor.fetchall()
+        currentPasswordHashed = data[0][4]
+        passwordConfirm = request.form['newpassconfirm']
+        newPassword = request.form['newpass']
+        oldpass = request.form['oldpass']
+        if check_password_hash(str(data[0][4]), oldpass) and passwordConfirm == newPassword:
+            hashedPassword = generate_password_hash(newPassword)
+            cursor.execute(
+            ''' update Dane_uzytkownika set haslo = '%s' where Dane_ID = '%s' ; ''' %(hashedPassword, session['user']))
+            mysql.connection.commit()
+            cursor.close()
+            return render_template('error.html', error = "You have succesfully changed your password.")
+        else:
+            return render_template('error.html', error = "You have either provided a wrong old password or new password and password confirmation doesn't match. Try again")
+    else:
+        return render_template('error.html', error = ":D :D :D nice try")
 
 app.run(host='localhost', port=5000)

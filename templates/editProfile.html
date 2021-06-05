@@ -14,9 +14,19 @@
         <hr>
         {% block content %}{% endblock %}
          <h1>Hello {{name}} </h1>
+		 <p>Your current information:</p>
+		 <p>Name: {{name}}</p>
+		 <p>Surname: {{surname}}</p>
+		 <p>Country: {{country}}</p>
+		 <p>City: {{city}}</p>
+		 <p>Voivodeship: {{voivodeship}}</p>
+		 <p>Street name: {{street}}</p>
+		 <p>Zip code: {{zip}}</p>
+		 <p>House no: {{house}}</p>
+		 <p>Apartment no: {{appno}}</p>
+		 <br>
+		 <br>
 		 <p>You can either <a href="/addressEdit">edit your address</a> or <a href="/passwordChange">change your password</a>.</p>
-		
-
         <footer class="footer">
         <p>&copy; Bazy Danych - Projekt 2021 </p>
         </footer>
