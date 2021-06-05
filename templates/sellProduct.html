@@ -16,13 +16,13 @@
 <form action="/sendSellRequest" method = "POST">
     <h1>Provide product details</h1>
     <label>Product name:</label><br>
-    <input type = "text" name = "name" required autofocus/><br>
+    <input type = "text" name = "name" required autofocus /><br>
     <label>Price:</label><br>
-    <input type = "text" name = "price" required/><br>
+    <input type = "text" name = "price" required /><br>
     <label>Description:</label><br>
-    <textarea rows = "10" cols = "30" name = "description">Enter description here...</textarea><br>
+    <textarea rows = "10" cols = "30" name = "description" required>Enter description here...</textarea><br>
     <label>Category:</label><br>
-	<select name="categories" required/>
+	<select name="categories" required />
 		<option value="Electronics">Electronics</option>
 		<option value="Clothes">Clothes</option>
 		<option value="Kitchen utensils">Kitchen utensils</option>

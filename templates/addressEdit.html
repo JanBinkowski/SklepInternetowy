@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      {% if title %}
+      <title>{{ title }} - Internet Shop Application</title>
+      {% else %}
+      <title>Internet Shop</title>
+      {% endif %}
+</head>
+<body>
+<div>Internet  shop:&nbsp;&nbsp;&nbsp;
+            <a href="/">Home</a>&nbsp;&nbsp;&nbsp;
+            <a href="/editProfile">Back</a>&nbsp;&nbsp;&nbsp;
+        </div>
+        <hr>
+<form action="/addressEditRequest" method = "POST">
+     <label>* Country:</label><br>
+     <input type = "text" name = "panstwo" autofocus required /><br>
+     <label>* City:</label><br>
+     <input type = "text" name = "miasto" required /><br>
+     <label>* Voivodeship:</label><br>
+     <input type = "text" name = "wojewodztwo" required /><br>
+     <label>* Street:</label><br>
+     <input type = "text" name = "ulica" required /><br>
+     <label>* Postal code:</label><br>
+     <input type = "text" name = "kod_pocztowy" required /><br>
+     <label>* House no:</label><br>
+     <input type = "text" name = "numer_domu" required /><br>
+     <label>Apartment no:</label><br>
+     <input type = "text" name = "numer_mieszkania"/><br>
+     <p><input type = "submit" value = "Submit" /></p>
+</form>
+<p>* - Required fileds.</p>
+
+ <footer class="footer">
+        <p>&copy; Bazy Danych - Projekt 2021</p>
+        </footer>
+</body>
+
+</html>
