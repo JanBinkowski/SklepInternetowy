@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      {% if title %}
+      <title>{{ title }} - Internet Shop Application</title>
+      {% else %}
+      <title>Internet Shop</title>
+      {% endif %}
+</head>
+<body>
+<div>Internet  shop:&nbsp;&nbsp;&nbsp;
+            <a href="/">Home</a>&nbsp;&nbsp;&nbsp;
+        </div>
+        <hr>
+<form action="/sendSellRequest" method = "POST">
+    <h1>Provide product details</h1>
+    <label>Product name:</label><br>
+    <input type = "text" name = "name" required autofocus/><br>
+    <label>Price:</label><br>
+    <input type = "text" name = "price" required/><br>
+    <label>Description:</label><br>
+    <textarea rows = "10" cols = "30" name = "description">Enter description here...</textarea><br>
+    <label>Category:</label><br>
+    <label for = "categories">
+	<select name="categories" id = "categories"/>
+		<option value="Electronics">Electronics</option>
+		<option value="Clothes">Clothes</option>
+		<option value="Furniture">Furniture</option>
+		<option value="Pets">Pets</options>
+		<option value="Car parts">Car parts</option>
+	</select><br>
+	<p><input type = "submit" value = "Submit" /></p>
+</form>
+
+ <footer class="footer">
+        <p>&copy; Bazy Danych - Projekt 2021</p>
+        </footer>
+</body>
+
+</html>

@@ -67,6 +67,31 @@ def validateLogin():
     except Exception as e:
         return render_template('error.html', error=str(e))
 
+@app.route('/sellProduct')
+def sellProduct():
+    if session.get('user'):
+        return render_template("sellProduct.html")
+    else:
+        return render_template('error.html', error="Register and log in before selling product")
+
+@app.route('/sendSellRequest', methods=['POST', 'GET'])
+def sendSellRequest():
+    if request.method == 'GET':
+        return "Something went wrong"
+
+    if request.method == 'POST':
+        name = request.form['name']
+        price = request.form['price']
+        description = request.form['description']
+        category = request.form['categories']
+        print(name)
+        print(price)
+        print(description)
+        print(category)
+
+        return render_template('error.html', error='Just testing')
+        
+
 @app.route('/signUp', methods=['POST', 'GET'])
 def signUp():
     if request.method == 'GET':
