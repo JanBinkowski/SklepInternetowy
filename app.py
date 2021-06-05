@@ -15,7 +15,10 @@ app.secret_key = 'why would I tell you my secret key?'
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    if session.get('user'):
+        return render_template('homeLogged.html')
+    else:
+        return render_template('home.html')
 
 @app.route('/register')
 def form():
