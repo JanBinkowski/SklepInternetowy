@@ -13,6 +13,13 @@ app.config['MYSQL_DB'] = 'sklep'
 mysql = MySQL(app)
 app.secret_key = 'why would I tell you my secret key?'
 
+@app.route('/addressEdit')
+def addressEdit():
+    if session.get('user'):
+        return render_template('addressEdit.html')
+    else:
+        return render_template('error.html', error = "In order to change your address, first log in")
+
 @app.route('/')
 def home():
     if session.get('user'):
@@ -202,4 +209,22 @@ def passwordChangeRequest():
     else:
         return render_template('error.html', error = ":D :D :D nice try")
 
+@app.route('/addressEditRequest', methods = ['POST', 'GET'])
+def addressEditRequest():
+    if session.get('user'):
+        cursor = mysql.connection.cursor()
+        panstwo = request.form['panstwo']
+        miasto = request.form['miasto']
+        wojewodztwo = request.form['wojewodztwo']
+        ulica = request.form['ulica']
+        kod_pocztowy = request.form['kod_pocztowy']
+        numer_domu = request.form['numer_domu']
+        numer_mieszkania = request.form['numer_mieszkania']
+        cursor.execute(
+            ''' update Dane_uzytkownika set panstwo = '%s', miasto = '%s', wojewodztwo = '%s', ulica = '%s', kod_pocztowy = '%s', numer_domu = '%s', numer_mieszkania = '%s' WHERE Dane_ID = '%s' ''' %(panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu, numer_mieszkania, session['user']))
+        mysql.connection.commit()
+        cursor.close()
+        return render_template('error.html', error = "You have changed your delivery address.")
+    else:
+        return render_template('error.html', error = "First log in.")
 app.run(host='localhost', port=5000)
