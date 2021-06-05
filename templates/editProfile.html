@@ -5,23 +5,20 @@
       {% else %}
       <title>Internet Shop</title>
       {% endif %}
-
     </head>
     <body>
         <div>Internet  shop:&nbsp;&nbsp;&nbsp;
-            <a href="/">Home</a>&nbsp;&nbsp;&nbsp;
-			<a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;
             <a href="/logout">Logout</a>&nbsp;&nbsp;&nbsp;
-			<a href="/sellProduct">Sell Product</a>&nbsp;&nbsp;&nbsp;
+             <a href="/">Home Page</a>&nbsp;&nbsp;&nbsp;
         </div>
         <hr>
         {% block content %}{% endblock %}
-         <h1>Internet Shop Application</h1>
-    <p>Hello, welcome to our shop.</p>
-
+         <h1>Hello {{name}} </h1>
+		 <p>You can either <a href="/addressEdit">edit your address</a> or <a href="/passwordChange">change your password</a>.</p>
+		
 
         <footer class="footer">
-        <p>&copy; Bazy Danych - Projekt 2021</p>
+        <p>&copy; Bazy Danych - Projekt 2021 </p>
         </footer>
     </body>
 </html>

@@ -28,6 +28,19 @@ def form():
 def signIn():
     return render_template('signIn.html')
 
+@app.route('/editProfile', methods=['GET'])
+def editProfile():
+    if session.get('user'):
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            '''	select * from Dane_uzytkownika where Dane_ID = '%s' ;''' %(session['user']))
+        data = cursor.fetchall()
+        imie = data[0][1]
+        cursor.close()
+        return render_template('editProfile.html', name=imie)
+    else:
+        return render_template('error.html', error='Log in if you want to edit your profile.')
+
 @app.route('/userHome')
 def userHome():
     if session.get('user'):
@@ -144,12 +157,11 @@ def profileInfo():
     try:
         cursor = mysql.connection.cursor()
         # cursor.callproc('sprawdz_login', (login,haslo,))
-        print (session['user'])
         cursor.execute(
             '''	select * from Dane_uzytkownika where Dane_ID = '%s' ;''' %(session['user']))
         data = cursor.fetchall()
         imie = data[0][1]
-        return render_template('/profile.html', name=imie)
+        return render_template('profile.html', name=imie)
     except Exception as e:
         return render_template('error.html', error=str(e))
 
