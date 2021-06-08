@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      {% if title %}
+      <title>{{ title }} - Internet Shop Application</title>
+      {% else %}
+      <title>Internet Shop</title>
+      {% endif %}
+</head>
+<body>
+<div>Internet  shop:&nbsp;&nbsp;&nbsp;
+            <a href="/logout">Logout</a>&nbsp;&nbsp;&nbsp;
+             <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;
+			 <a href="/">Home page</a>&nbsp;&nbsp;&nbsp;
+			 <a href="/sellProduct">Sell Product</a>&nbsp;&nbsp;&nbsp;
+        </div>
+        <hr>
+<form action="/sendSelectRequest" method = "POST">
+    <h1>Select category</h1>
+    <label>Category:</label><br>
+	<select name="categories" required />
+		<option value="Electronics">Electronics</option>
+		<option value="Clothes">Clothes</option>
+		<option value="Kitchen utensils">Kitchen utensils</option>
+		<option value="Pets">Pets</options>
+		<option value="Car parts">Car parts</option>
+	</select><br>
+	<p><input type = "submit" value = "Submit" /></p>
+</form>
+
+ <footer class="footer">
+        <p>&copy; Bazy Danych - Projekt 2021</p>
+        </footer>
+</body>
+
+</html>

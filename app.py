@@ -227,4 +227,85 @@ def addressEditRequest():
         return render_template('error.html', error = "You have changed your delivery address.")
     else:
         return render_template('error.html', error = "First log in.")
+
+@app.route('/selectProduct', methods=['POST', 'GET'])
+def selectProduct():
+    if session.get('user'):
+        return render_template("selectProduct.html")
+    else:
+        return render_template('error.html', error="Register and log in before selling product")
+
+@app.route('/sendSelectRequest', methods=['POST', 'GET'])
+def sendSelectRequest():
+
+    if request.method == 'GET':
+       return "Something went wrong"
+
+    if request.method == 'POST':
+        category = request.form['categories']
+
+        if category == 'Electronics':
+            categoryID = 1
+        if category == 'Clothes':
+            categoryID = 2
+        if category == 'Kitchen utensils':
+            categoryID = 3
+        if category == 'Pets':
+            categoryID = 4
+        if category == 'Car parts':
+            categoryID = 5
+
+    cursor = mysql.connection.cursor()
+    cursor.execute("Select Produkt_ID, nazwa, cena from Produkt where Kategoria_Kategoria_ID = '%s' and czyDostepny=1; " % (categoryID))
+    data = cursor.fetchall()
+
+    return render_template('showProduct.html', data=data)
+
+@app.route('/sendSelect', methods=['POST', 'GET'])
+def sendSelect():
+    if request.method == 'GET':
+        return "Something went wrong"
+
+    if request.method == 'POST':
+        price = request.form['price']
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("Select * from Produkt where Produkt_ID = '%s'; " % (price))
+        data = cursor.fetchall()
+        print(data)
+        idProduktu = data[0][0]
+        name = data[0][1]
+        cena = data[0][2]
+        print(cena)
+        opis = data[0][3]
+        session['idProduktu'] = idProduktu
+        return render_template('showDetails.html', name=name, cena=cena, opis=opis, idProduktu=idProduktu)
+
+@app.route('/Buy', methods=['POST', 'GET'])
+def Buy():
+    if request.method == 'GET':
+        return "Something went wrong"
+
+    if request.method == 'POST':
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            '''	select * from Dane_uzytkownika where Dane_ID = '%s' ;''' % (session['user']))
+        data = cursor.fetchall()
+        dane_id = data[0][0]
+        cursor.execute(
+            '''	select * from Kupujacy where Dane_ID = '%s' ;''' % (dane_id))
+        data1 = cursor.fetchall()
+        id_kupujacego = data1[0][0]
+        print(id_kupujacego)
+        idProduktu = session.get('idProduktu', None)
+        print(idProduktu)
+        cursor = mysql.connection.cursor()
+        cursor.callproc('zlozZamowienie',
+                      [idProduktu, id_kupujacego])
+        mysql.connection.commit()
+        cursor.close()
+        return render_template('bought.html', error="Done!")
+
+
+
 app.run(host='localhost', port=5000)

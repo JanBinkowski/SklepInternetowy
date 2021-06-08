@@ -1,27 +1,31 @@
-<html>
-    <head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
       {% if title %}
       <title>{{ title }} - Internet Shop Application</title>
       {% else %}
       <title>Internet Shop</title>
       {% endif %}
-    </head>
-    <body>
-        <div>Internet  shop:&nbsp;&nbsp;&nbsp;
+</head>
+<body>
+<div>Internet  shop:&nbsp;&nbsp;&nbsp;
             <a href="/logout">Logout</a>&nbsp;&nbsp;&nbsp;
              <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;
 			 <a href="/">Home page</a>&nbsp;&nbsp;&nbsp;
 			 <a href="/sellProduct">Sell Product</a>&nbsp;&nbsp;&nbsp;
              <a href="/selectProduct">Select Product</a>
         </div>
-        <hr>
+<hr>
         {% block content %}{% endblock %}
-         <h1>Hello {{userName}} </h1>
+<h1>{{name}}</h1>
+<p>Price: {{cena}}</p>
+<p>Description: {{opis}}</p>
 
 
+<form action="/Buy" method = "POST">
+    <p><input type = "submit" value = "Buy it" /></p>
+</form>
 
-        <footer class="footer">
-        <p>&copy; Bazy Danych - Projekt 2021 </p>
-        </footer>
-    </body>
+</body>
 </html>
