@@ -125,13 +125,17 @@ def sendSellRequest():
         description = request.form['description']
         category = request.form['categories']
 
-        categoryID = 1
+        # categoryID = 1
         if category == 'Electronics':
             categoryID = 1
         if category == 'Clothes':
             categoryID = 2
         if category == 'Kitchen utensils':
             categoryID = 3
+        if category == 'Pets':
+            categoryID = 4
+        if category == 'Car parts':
+            categoryID = 5
         
         cursor.callproc('dodajProdukt',[name, price, description, categoryID, 1, sellerID])
         mysql.connection.commit()
@@ -161,7 +165,7 @@ def signUp():
 
         hashed_haslo = generate_password_hash(haslo)
         hashed_hasloConfirm = generate_password_hash(hasloConfirm)
-        if (haslo == hasloConfirm):
+        if (haslo == hasloConfirm & haslo >= 5 & haslo <= 30):
             cursor = mysql.connection.cursor()
 
             cursor.callproc('dodaj_uzytkownika',[imie, nazwisko, login, hashed_haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu, numer_mieszkania])
@@ -171,7 +175,7 @@ def signUp():
             flash('Congratulations, you are now a registered user!')
             return render_template('error.html', error='Congratulation, now you are registered!')
         else:
-            return render_template('error.html', error='Password and confirmation does not match!')
+            return render_template('error.html', error='Please check password!')
 
 
 @app.route('/profile', methods=['GET'])
