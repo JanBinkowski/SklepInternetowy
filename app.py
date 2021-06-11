@@ -308,8 +308,39 @@ def Buy():
                       [idProduktu, id_kupujacego])
         mysql.connection.commit()
         cursor.close()
-        return render_template('bought.html', error="Done!")
+        cursor = mysql.connection.cursor()
+        cursor.execute("Select * from Produkt where Produkt_ID = '%s'; " % (idProduktu))
+        data = cursor.fetchall()
+        name = data[0][1]
+        cena = data[0][2]
+        print(cena)
+        opis = data[0][3]
+        return render_template('bought.html', name=name, cena=cena, opis=opis)
 
+@app.route('/Changeproduct', methods=['POST', 'GET'])
+def ChangeProduct():
+    if request.method == 'GET':
+        return "Something went wrong"
 
+    if request.method == 'POST':
+        return render_template('selectProduct.html')
+
+@app.route('/gotohome', methods=['POST', 'GET'])
+def gotohome():
+    if request.method == 'GET':
+        return "Something went wrong"
+
+    if request.method == 'POST':
+        return render_template('homeLogged.html')
+
+@app.route('/seeallorders', methods=['POST', 'GET'])
+def seeallorders():
+    if request.method == 'GET':
+        return "Something went wrong"
+
+    if request.method == 'POST':
+        user_id = session.get('user')
+
+    return render_template('homeLogged.html')
 
 app.run(host='localhost', port=5000)
