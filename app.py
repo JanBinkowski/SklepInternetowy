@@ -119,13 +119,16 @@ def sendSellRequest():
         cursor.execute(
             '''	select * from Sprzedajacy where Dane_ID = '%s' ;''' %(session['user']))
         data = cursor.fetchall()
+        print(data[0][0])
         sellerID = data[0][0]
         name = request.form['name']
         price = request.form['price']
         description = request.form['description']
         category = request.form['categories']
 
-        # categoryID = 1
+        # price = price.replace(",", ".")
+
+        categoryID = 1
         if category == 'Electronics':
             categoryID = 1
         if category == 'Clothes':
@@ -136,7 +139,7 @@ def sendSellRequest():
             categoryID = 4
         if category == 'Car parts':
             categoryID = 5
-        
+        print(name, price, description, categoryID, sellerID)
         cursor.callproc('dodajProdukt',[name, price, description, categoryID, 1, sellerID])
         mysql.connection.commit()
         cursor.close()
@@ -165,7 +168,7 @@ def signUp():
 
         hashed_haslo = generate_password_hash(haslo)
         hashed_hasloConfirm = generate_password_hash(hasloConfirm)
-        if (haslo == hasloConfirm & haslo >= 5 & haslo <= 30):
+        if (haslo == hasloConfirm):
             cursor = mysql.connection.cursor()
 
             cursor.callproc('dodaj_uzytkownika',[imie, nazwisko, login, hashed_haslo, panstwo, miasto, wojewodztwo, ulica, kod_pocztowy, numer_domu, numer_mieszkania])
@@ -175,7 +178,7 @@ def signUp():
             flash('Congratulations, you are now a registered user!')
             return render_template('error.html', error='Congratulation, now you are registered!')
         else:
-            return render_template('error.html', error='Please check password!')
+            return render_template('error.html', error='Please repeat password correctly!')
 
 
 @app.route('/profile', methods=['GET'])
