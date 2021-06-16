@@ -193,6 +193,31 @@ def profileInfo():
     except Exception as e:
         return render_template('error.html', error=str(e))
 
+
+@app.route('/showSoldProducts', methods = ['POST', 'GET'])
+def showSoldProducts():
+    if session.get('user'):
+        return render_template('error.html', error = "")
+    else:
+        return render_template('error.html', error = "First log in")
+
+
+@app.route('/showProductsPutForSale', methods = ['POST', 'GET'])
+def showProductsPutForSale():
+    if session.get('user'):
+        print(session.get('user'))
+        cursor = mysql.connection.cursor()
+        cursor.execute("Select Sprzedajacy_ID from Sprzedajacy where Dane_ID = '%s' " %(session.get('user')))
+        data1 = cursor.fetchall()
+
+
+        cursor.execute("Select Produkt_ID, nazwa, cena from Produkt where Sprzedajacy_ID = '%s' and czyDostepny=1; " % (data1[0][0]))
+        data = cursor.fetchall()
+
+        return render_template('productsPutForSale.html', data=data)
+    else:
+        return render_template('error.html', error = "First log in")
+
 @app.route('/passwordChangeRequest', methods=['POST', 'GET'])
 def passwordChangeRequest():
     if session.get('user'):
