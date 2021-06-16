@@ -210,7 +210,6 @@ def showProductsPutForSale():
         cursor.execute("Select Sprzedajacy_ID from Sprzedajacy where Dane_ID = '%s' " %(session.get('user')))
         data1 = cursor.fetchall()
 
-
         cursor.execute("Select Produkt_ID, nazwa, cena from Produkt where Sprzedajacy_ID = '%s' and czyDostepny=1; " % (data1[0][0]))
         data = cursor.fetchall()
 
