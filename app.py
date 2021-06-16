@@ -205,7 +205,6 @@ def showSoldProducts():
 @app.route('/showProductsPutForSale', methods = ['POST', 'GET'])
 def showProductsPutForSale():
     if session.get('user'):
-        print(session.get('user'))
         cursor = mysql.connection.cursor()
         cursor.execute("Select Sprzedajacy_ID from Sprzedajacy where Dane_ID = '%s' " %(session.get('user')))
         data1 = cursor.fetchall()
@@ -259,6 +258,64 @@ def addressEditRequest():
         return render_template('error.html', error = "You have changed your delivery address.")
     else:
         return render_template('error.html', error = "First log in.")
+
+@app.route('/showBoughtProducts', methods = ['POST', 'GET'])
+def showBoughtProducts():
+    if session.get('user'):
+        cursor = mysql.connection.cursor()
+        cursor.execute("Select Kupujacy_ID from Kupujacy where Dane_ID = '%s' " %(session.get('user')))
+        data1 = cursor.fetchall()
+        cursor.execute("""SELECT Produkt_ID, nazwa, cena from Produkt where Produkt_ID in
+                          (SELECT Produkt_Produkt_ID from Zamowienie_Produkt WHERE Zamowienie_Zamowienie_ID in
+                          (SELECT Zamowienie_ID from Zamowienie WHERE Kupujacy_ID = '%s'))""" %(data1[0][0]))
+        data2 = cursor.fetchall()
+        print(data2)
+
+        cursor.execute("""SELECT status from Zamowienie where Zamowienie_ID in
+                          (SELECT Zamowienie_Zamowienie_ID from Zamowienie_Produkt WHERE Produkt_Produkt_ID in
+                          (SELECT Produkt_Produkt_ID from Zamowienie_Produkt WHERE Zamowienie_Zamowienie_ID in
+                          (SELECT Zamowienie_ID from Zamowienie WHERE Kupujacy_ID = '%s')));""" % (data1[0][0]))
+        data = cursor.fetchall()
+        if (len(data) > 0):
+            new_tuple = ((data2[0][0], data2[0][1], data2[0][2], data[0][0]),)
+            for i in range(1, len(data)):
+                new_tuple = new_tuple + ((data2[i][0], data2[i][1], data2[i][2], data[i][0]),)
+        else:
+            return render_template('error.html', error = "You haven't bought anything yet.")
+        print(new_tuple)
+        return render_template('productsBought.html', data = new_tuple)
+    else:
+        return render_template('error.html', error = "First log in")
+
+@app.route('/payForProduct',  methods = ['POST', 'GET'])
+def payForProduct():
+    if session.get('user'):
+        price = request.form['price']
+        cursor = mysql.connection.cursor()
+        cursor.execute("Select Kupujacy_ID from Kupujacy where Dane_ID = '%s' " %(session.get('user')))
+        data1 = cursor.fetchall()
+        cursor.execute("""SELECT Produkt_Produkt_ID from Zamowienie_Produkt WHERE Zamowienie_Zamowienie_ID in
+                          (SELECT Zamowienie_ID from Zamowienie WHERE Kupujacy_ID = '%s')""" %(data1[0][0]))
+        data2 = cursor.fetchall()
+        helpTup = (int(price),)
+        print(helpTup)
+        print(data2)
+        if (helpTup in data2):
+            cursor.execute("""select status from Zamowienie where Zamowienie_id in
+                             (select Zamowienie_Zamowienie_ID from Zamowienie_Produkt where Produkt_Produkt_ID = '%s') """ %(price))
+            status = cursor.fetchall()
+            if (status[0][0] == 'Nieoplacone'):
+                cursor.execute("""update Zamowienie set status = 'Oplacone' where Zamowienie_id in
+                                 (select Zamowienie_Zamowienie_ID from Zamowienie_Produkt where Produkt_Produkt_ID = '%s')""" %(price))
+                mysql.connection.commit()
+                return render_template('error.html', error = "Simulation of paying... You have successfully paid for ordered product!")
+            else:
+                return render_template('error.html', error = "This order has already been paid for.")
+        else:
+            return render_template('error.html', error = "This products wasn't bought by you!")
+    else:
+        return render_template('error.html', error = "Log in first")
+
 
 @app.route('/selectProduct', methods=['POST', 'GET'])
 def selectProduct():
