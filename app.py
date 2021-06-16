@@ -126,7 +126,7 @@ def sendSellRequest():
         description = request.form['description']
         category = request.form['categories']
 
-        # price = price.replace(",", ".")
+        price = price.replace(",", ".")
 
         categoryID = 1
         if category == 'Electronics':
