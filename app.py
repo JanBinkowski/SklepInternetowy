@@ -194,12 +194,36 @@ def profileInfo():
         return render_template('error.html', error=str(e))
 
 
+
 @app.route('/showSoldProducts', methods = ['POST', 'GET'])
 def showSoldProducts():
     if session.get('user'):
-        return render_template('error.html', error = "")
+        print(session.get('user'))
+        cursor = mysql.connection.cursor()
+        cursor.execute("Select Sprzedajacy_ID from Sprzedajacy where Dane_ID = '%s' " %(session.get('user')))
+        data1 = cursor.fetchall()
+
+        cursor.execute("""SELECT Produkt_ID, nazwa, cena from Produkt where Produkt_ID in
+                          (SELECT Produkt_Produkt_ID from Zamowienie_Produkt WHERE Zamowienie_Zamowienie_ID in
+                          (SELECT Zamowienie_ID from Zamowienie WHERE Sprzedajacy_ID = '%s'))""" %(data1[0][0]))
+        data2 = cursor.fetchall()
+
+        cursor.execute("""SELECT status from Zamowienie where Zamowienie_ID in
+                          (SELECT Zamowienie_Zamowienie_ID from Zamowienie_Produkt WHERE Produkt_Produkt_ID in
+                          (SELECT Produkt_Produkt_ID from Zamowienie_Produkt WHERE Zamowienie_Zamowienie_ID in
+                          (SELECT Zamowienie_ID from Zamowienie WHERE Sprzedajacy_ID = '%s')));""" % (data1[0][0]))
+        data = cursor.fetchall()
+        if (len(data) > 0):
+            new_tuple = ((data2[0][0], data2[0][1], data2[0][2], data[0][0]),)
+            for i in range(1, len(data)):
+                new_tuple = new_tuple + ((data2[i][0], data2[i][1], data2[i][2], data[i][0]),)
+        else:
+            return render_template('error.html', error = "You haven't bought anything yet.")
+
+        return render_template('soldProducts.html', data = new_tuple)
     else:
         return render_template('error.html', error = "First log in")
+
 
 
 @app.route('/showProductsPutForSale', methods = ['POST', 'GET'])
@@ -209,7 +233,6 @@ def showProductsPutForSale():
         cursor = mysql.connection.cursor()
         cursor.execute("Select Sprzedajacy_ID from Sprzedajacy where Dane_ID = '%s' " %(session.get('user')))
         data1 = cursor.fetchall()
-
 
         cursor.execute("Select Produkt_ID, nazwa, cena from Produkt where Sprzedajacy_ID = '%s' and czyDostepny=1; " % (data1[0][0]))
         data = cursor.fetchall()
@@ -327,23 +350,29 @@ def Buy():
         cursor.execute(
             '''	select * from Kupujacy where Dane_ID = '%s' ;''' % (dane_id))
         data1 = cursor.fetchall()
+
         id_kupujacego = data1[0][0]
-        print(id_kupujacego)
+
         idProduktu = session.get('idProduktu', None)
-        print(idProduktu)
-        cursor = mysql.connection.cursor()
-        cursor.callproc('zlozZamowienie',
-                      [idProduktu, id_kupujacego])
-        mysql.connection.commit()
-        cursor.close()
-        cursor = mysql.connection.cursor()
-        cursor.execute("Select * from Produkt where Produkt_ID = '%s'; " % (idProduktu))
-        data = cursor.fetchall()
-        name = data[0][1]
-        cena = data[0][2]
-        print(cena)
-        opis = data[0][3]
-        return render_template('bought.html', name=name, cena=cena, opis=opis)
+
+        cursor.execute("select Sprzedajacy_ID from Produkt where Produkt_ID = '%s' " % (idProduktu))
+        data2 = cursor.fetchall()
+
+        if(data1[0][0] == data2[0][0]):
+            return render_template('error.html', error="You cannnot buy your own product.")
+        else:
+            cursor = mysql.connection.cursor()
+            cursor.callproc('zlozZamowienie',
+                            [idProduktu, id_kupujacego])
+            mysql.connection.commit()
+            cursor.close()
+            cursor = mysql.connection.cursor()
+            cursor.execute("Select * from Produkt where Produkt_ID = '%s'; " % (idProduktu))
+            data = cursor.fetchall()
+            name = data[0][1]
+            cena = data[0][2]
+            opis = data[0][3]
+            return render_template('bought.html', name=name, cena=cena, opis=opis)
 
 @app.route('/Changeproduct', methods=['POST', 'GET'])
 def ChangeProduct():
