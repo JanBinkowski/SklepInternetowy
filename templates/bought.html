@@ -22,18 +22,18 @@
         <h1>Thank you for your order!</h1>
           <p>You bought: <b>{{name}} </b></p>
           <p><i>{{opis}}</i></p>
-          <p> Please transfer <b>{{cena}} PLN </b> in next 5 working days.</p>
-          <p>Sklep internetowy przy PWR </p>
-          <p>wybrzeze Stanislawa Wyspianskiego 27, 50-370 Wroclaw</p>
-          <p> <b>Bank account: </b> 87 1010 1397 0055 0022 2100 0000 </p>
+          <p> Price: <b>{{cena}} PLN </b></p>
+          <p>In order to pay for the product, access the link below</p>
+          <p>If you don't want to pay know, you can do it later</p>
+          <p>by accessing "Show bought products" from your profile.</p>
 
           </div>
 
-<form action="/seeallorders" method = "POST">
-    <p><input type = "submit" value = "See all orders" /></p>
+<form action="/showBoughtProducts" method = "GET">
+    <p><input type = "submit" value = "Show bought products" /></p>
 </form>
 
-<form action="/gotohome" method = "POST">
+<form action="/" method = "GET">
     <p><input type = "submit" value = "Go to home page" /></p>
 </form>
 

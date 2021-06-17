@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      {% if title %}
+      <title>{{ title }} - Internet Shop Application</title>
+      {% else %}
+      <title>Internet Shop</title>
+      {% endif %}
+</head>
+<body>
+<div>Internet  shop:&nbsp;&nbsp;&nbsp;
+            <a href="/logout">Logout</a>&nbsp;&nbsp;&nbsp;
+             <a href="/profile">Profile</a>&nbsp;&nbsp;&nbsp;
+			 <a href="/">Home page</a>&nbsp;&nbsp;&nbsp;
+        </div>
+<hr>
+        {% block content %}{% endblock %}
+<style>
+
+ td {
+        width: 150px;
+        text-align: center;
+        border: 1px solid black;
+        padding: 5px;
+      }
+</style>
+<style> td { border: 1px solid black; } </style>
+<!-- ustawienie czarnego obramowania komórek tabeli w CSS -->
+
+<table>
+  <thead>
+  <tr>
+    <th>Product ID</th>
+    <th>Name</th>
+    <th>Price</th>
+	<th>Status</th>
+  </tr>
+  </thead>
+  <tbody>
+      {% for row in data %}
+            <tr>
+                <td>{{row[0]}}</td>
+                <td>{{row[1]}}</td>
+                <td>{{row[2]}}</td>
+				<td>{{row[3]}}</td>
+            </tr>
+        {% endfor %}
+  </tbody>
+
+</table>
+
+<form action="/payForProduct" method = "POST">
+    <label>Choose product you'd like to pay for<label><br>
+    <label>Product number:</label><br>
+    <input type = "text" name = "price" required /><br>
+    <p><input type = "submit" value = "Submit" /></p>
+</form>
+</body>
+</html>
